@@ -6,12 +6,14 @@ User = get_user_model()
 class CustomAuthBackend(ModelBackend):
     def authenticate(self, request, username=None, password=None, **kwargs):
         try:
-            # For students, use roll_number
-            if 'roll_number' in kwargs:
-                user = User.objects.get(roll_number=kwargs['roll_number'])
+            # Use roll_no as the primary identifier since USERNAME_FIELD is 'roll_no'
+            if 'roll_no' in kwargs:
+                user = User.objects.get(roll_no=kwargs['roll_no'])
+            elif username:
+                # Check if username is actually a roll_no
+                user = User.objects.get(roll_no=username)
             else:
-                # For teachers, use username
-                user = User.objects.get(username=username)
+                return None
             
             if user.check_password(password):
                 return user

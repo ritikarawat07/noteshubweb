@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Login</title>
+    <title>Student SignUp</title>
     <style>
         * {
             margin: 0;
@@ -93,15 +93,6 @@
             display: none;
         }
         
-        .alert {
-            background: #f8d7da;
-            color: #721c24;
-            padding: 12px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            display: none;
-        }
-        
         .btn {
             width: 100%;
             padding: 12px;
@@ -125,23 +116,6 @@
             transform: translateY(0);
         }
         
-        .links {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 15px;
-            font-size: 13px;
-        }
-        
-        .links a {
-            color: #667eea;
-            text-decoration: none;
-            font-weight: 600;
-        }
-        
-        .links a:hover {
-            text-decoration: underline;
-        }
-        
         .footer {
             text-align: center;
             margin-top: 20px;
@@ -158,18 +132,29 @@
         .footer a:hover {
             text-decoration: underline;
         }
+        
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: none;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>Student Login</h1>
-            <p>Access your student dashboard</p>
+            <h1>Student Registration</h1>
+            <p>Create your account with your academic details</p>
         </div>
         
-        <div class="alert" id="alert"></div>
+        <div class="success-message" id="successMessage">
+            Account created successfully! Redirecting to login...
+        </div>
         
-        <form method="post" action="{% url 'studentlogin' %}">
+        <form method="post" action="{% url 'studentsignup' %}">
             {% csrf_token %}
             {% if error %}
             <div class="error-message" style="display: block; background: #f8d7da; color: #721c24; padding: 12px; border-radius: 5px; margin-bottom: 20px;">
@@ -180,6 +165,12 @@
                 <label for="rollNumber">Roll Number *</label>
                 <input type="text" id="roll_no" name="roll_no" placeholder="Enter your roll number" required>
                 <div class="error-message" id="rollNumberError"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="fullName">Full Name *</label>
+                <input type="text" id="full_name" name="full_name" placeholder="Enter your full name" required>
+                <div class="error-message" id="fullNameError"></div>
             </div>
             
             <div class="form-group">
@@ -197,16 +188,20 @@
                 <div class="error-message" id="passwordError"></div>
             </div>
             
-            <button type="submit" class="btn">Login</button>
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password *</label>
+                <div class="password-group">
+                    <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm password" required>
+                    <span class="toggle-password" onclick="togglePassword('confirmPassword')">Show</span>
+                </div>
+                <div class="error-message" id="confirmPasswordError"></div>
+            </div>
+            
+            <button type="submit" class="btn">Create Account</button>
         </form>
         
-        <div class="links">
-            <a href="{% url 'student_forgot_password' %}">Forgot Password?</a>
-            <a href="{% url 'studentsignup' %}">Sign Up</a>
-        </div>
-        
         <div class="footer">
-            <p>For teacher login, <a href="{% url 'teacherlogin' %}">click here</a></p>
+            Already have an account? <a href="{% url 'studentlogin' %}">Login here</a>
         </div>
     </div>
     
@@ -223,13 +218,15 @@
             }
         }
         
-        function handleLogin(event) {
+        function handleSignup(event) {
             event.preventDefault();
             clearErrors();
             
             const rollNumber = document.getElementById('rollNumber').value.trim();
+            const fullName = document.getElementById('fullName').value.trim();
             const dob = document.getElementById('dob').value;
             const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
             
             let isValid = true;
             
@@ -238,23 +235,32 @@
                 isValid = false;
             }
             
+            if (!fullName) {
+                showError('fullNameError', 'Full name is required');
+                isValid = false;
+            }
+            
             if (!dob) {
                 showError('dobError', 'Date of birth is required');
                 isValid = false;
             }
             
-            if (!password) {
-                showError('passwordError', 'Password is required');
+            if (!password || password.length < 6) {
+                showError('passwordError', 'Password must be at least 6 characters');
+                isValid = false;
+            }
+            
+            if (password !== confirmPassword) {
+                showError('confirmPasswordError', 'Passwords do not match');
                 isValid = false;
             }
             
             if (isValid) {
-                // Simulate authentication check
-                if (rollNumber === 'STU001' && dob === '2000-01-15' && password === 'password123') {
-                    window.location.href = 'student-dashboard.htm';
-                } else {
-                    showAlert('Invalid roll number, date of birth, or password');
-                }
+                document.getElementById('successMessage').style.display = 'block';
+                document.getElementById('signupForm').style.display = 'none';
+                setTimeout(() => {
+                    window.location.href = '{% url "studentlogin" %}';
+                }, 2000);
             }
         }
         
@@ -264,16 +270,9 @@
             errorElement.style.display = 'block';
         }
         
-        function showAlert(message) {
-            const alert = document.getElementById('alert');
-            alert.textContent = message;
-            alert.style.display = 'block';
-        }
-        
         function clearErrors() {
             const errors = document.querySelectorAll('.error-message');
             errors.forEach(error => error.style.display = 'none');
-            document.getElementById('alert').style.display = 'none';
         }
     </script>
 </body>

@@ -12,28 +12,138 @@ from django.core.paginator import Paginator
 
 def landingpage(request):
     return render(request, 'noteshub/landingpage.html')
+#=========================signup for student ======================
+
+def studentsignup(request):
+    if request.method == 'POST':
+
+        roll_no = request.POST['roll_no']
+        full_name = request.POST['full_name']
+        dob = request.POST['dob']
+        password = request.POST['password']
+        confirm_password = request.POST['confirmPassword']
+
+        # 1️⃣ Check if roll number already exists
+        if CustomUser.objects.filter(roll_no=roll_no).exists():
+            return render(request, 'noteshub/studentsignup.html', {
+                'error': 'Roll number already registered'
+            })
+
+        # 2️⃣ Check password match
+        if password != confirm_password:
+            return render(request, 'noteshub/studentsignup.html', {
+                'error': 'Passwords do not match'
+            })
+
+        # 3️⃣ Create student user
+        user = CustomUser.objects.create_user(
+            roll_no=roll_no,
+            full_name=full_name,
+            dob=dob,
+            password=password,
+            is_student=True
+        )
+
+        user.set_password(password)
+        user.save()
+
+        return redirect('studentlogin')
+
+    return render(request, 'noteshub/studentsignup.html')
+
 
 # ===================== STUDENT LOGIN =====================
-def studentloginview(request):
+
+def studentlogin(request):
     if request.method == 'POST':
-        form = StudentLoginForm(request.POST)
-        if form.is_valid():
-            roll_number = form.cleaned_data['roll_number']
-            password = form.cleaned_data['password']
 
-            user = authenticate(request, roll_number=roll_number, password=password)
+        roll_no = request.POST['roll_no']
+        dob = request.POST['dob']
+        password = request.POST['password']
 
-            if user is not None and user.is_student:
-                login(request, user)
-                return HttpResponseRedirect("/studentlogin/studentdashboard/")
-            else:
-                error = 'Invalid roll number or password'
+        try:
+            user = CustomUser.objects.get(
+                roll_no=roll_no,
+                dob=dob,
+                is_student=True
+            )
+        except CustomUser.DoesNotExist:
+            return render(request, 'noteshub/studentlogin.html', {
+                'error': 'Invalid Roll Number or DOB'
+            })
+
+        user_auth = authenticate(
+            request,
+            username=roll_no,
+            password=password
+        )
+
+        if user_auth:
+            login(request, user_auth)
+            return redirect('studentdashboard')
+
+        return render(request, 'noteshub/studentlogin.html', {
+            'error': 'Invalid Password'
+        })
+
+    return render(request, 'noteshub/studentlogin.html')
+
+#============================student forgot password ================
+def studentforgotpassword(request):
+
+    # Check if student already verified
+    user_id = request.session.get('reset_user_id')
+
+    if request.method == 'POST':
+
+        # 🔹 STEP 1: Verify Roll No + DOB
+        if not user_id:
+            roll_no = request.POST['roll_no']
+            dob = request.POST['dob']
+
+            try:
+                user = CustomUser.objects.get(
+                    roll_no=roll_no,
+                    dob=dob,
+                    is_student=True
+                )
+                request.session['reset_user_id'] = user.id
+                return render(
+                    request,
+                    'noteshub/studentforgotpassword.html',
+                    {'reset_stage': True}
+                )
+
+            except CustomUser.DoesNotExist:
+                return render(
+                    request,
+                    'noteshub/studentforgotpassword.html',
+                    {'error': 'Invalid Roll Number or DOB'}
+                )
+
+        # 🔹 STEP 2: Reset Password
         else:
-            error = 'Please fill in all fields'
+            password = request.POST['password']
+            confirm_password = request.POST['confirm_password']
 
-        return render(request, 'noteshub/studentlogin.html', {'form': form, 'error': error})
+            if password != confirm_password:
+                return render(
+                    request,
+                    'noteshub/studentforgotpassword.html',
+                    {
+                        'reset_stage': True,
+                        'error': 'Passwords do not match'
+                    }
+                )
 
-    return render(request, 'noteshub/studentlogin.html', {'form': StudentLoginForm(), 'error': None})
+            user = CustomUser.objects.get(id=user_id)
+            user.set_password(password)
+            user.save()
+
+            del request.session['reset_user_id']
+            return redirect('studentlogin')
+
+    return render(request, 'noteshub/studentforgotpassword.html')
 
 
 # ===================== STUDENT DASHBOARD =====================
@@ -41,7 +151,7 @@ def studentloginview(request):
 @login_required(login_url='studentlogin')
 def studentdashboard(request):
     if not request.user.is_student:
-        return redirect('landingpage')
+        return redirect('noteshub/landingpage')
 
     # Get filter values from URL query parameters
     year = request.GET.get('year')
@@ -61,7 +171,7 @@ def studentdashboard(request):
         notes = notes.filter(subject=subject)
 
     return render(request, 'noteshub/studentdashboard.html', {
-        'roll_number': request.user.roll_number,
+        'roll_number': request.user.roll_no,
         'notes': notes,
         'uploads': uploads,
         'year': year,
@@ -319,7 +429,7 @@ def studentupload(request):
     
     return render(request, 'noteshub/studentupload.html', {
         'form': form,
-        'roll_number': request.user.roll_number
+        'roll_number': request.user.roll_no
     })
 
 @login_required

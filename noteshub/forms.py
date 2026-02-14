@@ -9,15 +9,15 @@ import magic
 class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = CustomUser
-        fields = ('username', 'roll_number', 'is_teacher', 'is_student')
+        fields = ('roll_no', 'full_name', 'dob', 'is_teacher', 'is_student')
 
 class CustomUserChangeForm(UserChangeForm):
     class Meta:
         model = CustomUser
-        fields = ('username', 'roll_number', 'is_teacher', 'is_student')
+        fields = ('roll_no', 'full_name', 'dob', 'is_teacher', 'is_student')
 
 class StudentLoginForm(forms.Form):
-    roll_number = forms.CharField(
+    roll_no = forms.CharField(
         max_length=20,
         widget=forms.TextInput(attrs={
             'class': 'form-control',
@@ -42,14 +42,14 @@ class TeacherLoginForm(forms.Form):
             'id': 'id_username'
         })
     )
-    roll_number = forms.CharField(
+    roll_no = forms.CharField(
         label="Roll Number (Optional)",
         max_length=20,
         required=False,
         widget=forms.TextInput(attrs={
             'class': 'form-control',
             'placeholder': 'Enter roll number (optional)',
-            'id': 'id_roll_number'
+            'id': 'id_roll_no'
         })
     )
     password = forms.CharField(

@@ -4,7 +4,10 @@ from django.conf import settings
 from django.conf.urls.static import static
 urlpatterns = [
     path('', views.landingpage, name='landingpage'),
-    path('studentlogin/', views.studentloginview, name='studentlogin'),
+    path('student/signup/', views.studentsignup, name='studentsignup'),
+    path('student/login/', views.studentlogin, name='studentlogin'),
+    path('student/dashboard/', views.studentdashboard, name='studentdashboard'),
+    path('student/forgot-password/',views.studentforgotpassword,name='student_forgot_password'),
     path('teacherlogin/', views.teacheloginview, name='teacherlogin'),
     path('studentlogin/studentdashboard/', views.studentdashboard, name='studentdashboard'),
     path('teacherlogin/teacherdashboard/', views.teacherdashboard, name='teacherdashboard'),

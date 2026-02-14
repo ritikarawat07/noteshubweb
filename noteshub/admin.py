@@ -4,53 +4,51 @@ from django.utils.translation import gettext_lazy as _
 from .models import CustomUser, Notes
 from .forms import CustomUserCreationForm, CustomUserChangeForm
 
-# Custom admin for CustomUser
+
 class CustomUserAdmin(UserAdmin):
     add_form = CustomUserCreationForm
     form = CustomUserChangeForm
     model = CustomUser
-    
-    list_display = ('username', 'roll_number', 'is_teacher', 'is_student', 'is_active')
+
+    # ✅ SAFE: fields that always exist
+    list_display = ('display_name', 'is_teacher', 'is_student', 'is_active')
     list_filter = ('is_teacher', 'is_student', 'is_active')
-    
+    search_fields = ('roll_no', 'full_name')
+    ordering = ('id',)   # ✅ safest ordering
+
     fieldsets = (
-        (None, {
-            'fields': ('username', 'password'),
-        }),
-        (_('Personal info'), {
-            'fields': ('roll_number',),
-        }),
+        (None, {'fields': ('password',)}),
+        (_('Personal info'), {'fields': ('roll_no', 'full_name', 'dob')}),
         (_('Permissions'), {
             'fields': ('is_active', 'is_staff', 'is_superuser', 'is_teacher', 'is_student'),
         }),
-        (_('Important dates'), {
-            'fields': ('last_login', 'date_joined'),
-        }),
+        (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
     )
 
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('username', 'roll_number', 'password1', 'password2', 'is_teacher', 'is_student', 'is_active'),
+            'fields': (
+                'roll_no',
+                'full_name',
+                'dob',
+                'password1',
+                'password2',
+                'is_teacher',
+                'is_student',
+                'is_active',
+            ),
         }),
     )
 
-    def get_form(self, request, obj=None, **kwargs):
-        form = super().get_form(request, obj, **kwargs)
-        if obj and obj.is_teacher:
-            form.base_fields['username'].required = True
-            form.base_fields['roll_number'].required = False
-        elif obj and obj.is_student:
-            form.base_fields['username'].required = False
-            form.base_fields['roll_number'].required = True
-        return form
-
-    list_display = ('roll_number', 'username', 'is_teacher', 'is_student', 'is_active')
-    list_filter = ('is_teacher', 'is_student', 'is_active')
-    search_fields = ('roll_number', 'username')
-    ordering = ('roll_number',)
-    filter_horizontal = ()
     readonly_fields = ('last_login', 'date_joined')
+
+    # ✅ Custom safe display
+    def display_name(self, obj):
+        return obj.roll_no or obj.full_name or "User"
+
+    display_name.short_description = "User"
+
 
 admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(Notes)
