@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Sign-Up</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --navbar-color: #0F4C5C;
+            --button-color: #1B6F82;
+            --accent-color: #4CAF50;
+            --background-color: #F5F3EB;
+            --text-color: #222222;
+            --success-color: #4CAF50;
+            --warning-color: #ff8f00;
+            --danger-color: #e74c3c;
+            --light-color: #ffffff;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--background-color);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: var(--text-color);
+        }
+
+        .container {
+            background: var(--light-color);
+            border: 1px solid rgba(15, 76, 92, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(15, 76, 92, 0.1);
+            width: 100%;
+            max-width: 400px;
+            padding: 40px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: var(--text-color);
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: var(--text-color);
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--button-color);
+            box-shadow: 0 0 0 3px rgba(27, 111, 130, 0.1);
+        }
+
+        .password-group {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 40px;
+            cursor: pointer;
+            color: var(--button-color);
+            font-size: 14px;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 13px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--button-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(27, 111, 130, 0.4);
+            background: var(--navbar-color);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .links a {
+            color: var(--button-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Teacher Registration</h1>
+            <p>Create your account to start teaching</p>
+        </div>
+
+        <div class="success-message" id="successMessage">
+            Account created successfully! Redirecting to login...
+        </div>
+
+        <form method="post" action="{% url 'teachersignup' %}">
+            {% csrf_token %}
+            {% if error %}
+            <div class="error-message" style="display: block; background: #f8d7da; color: #721c24; padding: 12px; border-radius: 5px; margin-bottom: 20px;">
+                {{ error }}
+            </div>
+            {% endif %}
+            <div class="form-group">
+                <label for="username">Username *</label>
+                <input type="text" id="username" name="username" placeholder="Enter your username" required>
+                <div class="error-message" id="usernameError"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="fullName">Full Name *</label>
+                <input type="text" id="full_name" name="full_name" placeholder="Enter your full name" required>
+                <div class="error-message" id="fullNameError"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="dob">Date of Birth *</label>
+                <input type="date" id="dob" name="dob" required>
+                <div class="error-message" id="dobError"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password *</label>
+                <div class="password-group">
+                    <input type="password" id="password" name="password" placeholder="Enter password" required>
+                    <span class="toggle-password" onclick="togglePassword('password')">Show</span>
+                </div>
+                <div class="error-message" id="passwordError"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password *</label>
+                <div class="password-group">
+                    <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm password"
+                        required>
+                    <span class="toggle-password" onclick="togglePassword('confirmPassword')">Show</span>
+                </div>
+                <div class="error-message" id="confirmPasswordError"></div>
+            </div>
+
+            <button type="submit" class="btn">Create Account</button>
+        </form>
+
+        <div class="footer">
+            Already have an account? <a href="{% url 'teacherlogin' %}">Login here</a>
+        </div>
+    </div>
+
+    <script>
+        function togglePassword(fieldId) {
+            const field = document.getElementById(fieldId);
+            const btn = event.target;
+            if (field.type === 'password') {
+                field.type = 'text';
+                btn.textContent = 'Hide';
+            } else {
+                field.type = 'password';
+                btn.textContent = 'Show';
+            }
+        }
+
+        function handleSignup(event) {
+            event.preventDefault();
+            clearErrors();
+
+            const username = document.getElementById('username').value.trim();
+            const fullName = document.getElementById('fullName').value.trim();
+            const dob = document.getElementById('dob').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            let isValid = true;
+
+            if (!username) {
+                showError('usernameError', 'Username is required');
+                isValid = false;
+            }
+
+            if (!fullName) {
+                showError('fullNameError', 'Full name is required');
+                isValid = false;
+            }
+
+            if (!dob) {
+                showError('dobError', 'Date of birth is required');
+                isValid = false;
+            }
+
+            if (!password || password.length < 6) {
+                showError('passwordError', 'Password must be at least 6 characters');
+                isValid = false;
+            }
+
+            if (password !== confirmPassword) {
+                showError('confirmPasswordError', 'Passwords do not match');
+                isValid = false;
+            }
+
+            if (isValid) {
+                document.getElementById('successMessage').style.display = 'block';
+                document.getElementById('signupForm').style.display = 'none';
+                setTimeout(() => {
+                    window.location.href = 'teacherlogin.html';
+                }, 2000);
+            }
+        }
+
+        function showError(elementId, message) {
+            const errorElement = document.getElementById(elementId);
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+        }
+
+        function clearErrors() {
+            const errors = document.querySelectorAll('.error-message');
+            errors.forEach(error => error.style.display = 'none');
+        }
+    </script>
+</body>
+
+</html>

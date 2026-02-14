@@ -181,25 +181,119 @@ def studentdashboard(request):
 
 
 
-# ===================== TEACHER LOGIN =====================
-def teacheloginview(request):
-    if request.method == 'POST':
-        form = TeacherLoginForm(request.POST)
-        if form.is_valid():
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
-            user = authenticate(request, username=username, password=password)
+# ===================== TEACHER signup =====================
+def teacher_signup(request):
+
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+        confirm_password = request.POST.get("confirmPassword")
+
+        if password != confirm_password:
+            return render(request, "noteshub/teachersignup.html", {
+                "error": "Passwords do not match"
+            })
+
+        if CustomUser.objects.filter(roll_no=username).exists():
+            return render(request, "noteshub/teachersignup.html", {
+                "error": "Username already exists"
+            })
+
+        user = CustomUser.objects.create_user(
+            roll_no=username,   # 🔥 stored in roll_no
+            password=password,
+            is_teacher=True,
+            is_student=False,
+            full_name=username,
+            dob="2000-01-01"   # temporary required field
+        )
+
+        return redirect("teacherlogin")
+
+    return render(request, "noteshub/teachersignup.html")
+
+#=============================teacher login================================
+from django.contrib.auth import authenticate, login
+from django.shortcuts import render, redirect
+
+def teacher_login(request):
+
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+
+        print(f"DEBUG: username={username}")
+
+        # IMPORTANT: use username parameter
+        user = authenticate(request, username=username, password=password)
+
+        print(f"DEBUG: user={user}")
+
+        if user is not None and user.is_teacher:
+            login(request, user)
+            return redirect("teacherdashboard")
+        else:
+            return render(request, "noteshub/teacherlogin.html", {
+                "error": "Invalid username or password"
+            })
+
+    return render(request, "noteshub/teacherlogin.html")
+
+#===========================================forgot teacher ========================
+def teacher_forgot_password(request):
+    user_id = request.session.get('reset_user_id')
+    
+    if request.method == "POST":
+        if not user_id:
+            # Step 1: Verify identity
+            username = request.POST.get("username")
+            dob = request.POST.get("dob")
             
-            if user is not None and user.is_teacher:
-                login(request, user)
-                return HttpResponseRedirect("/teacherlogin/teacherdashboard/")
-            else:
-                messages.error(request, "Invalid login or not authorized as teacher.")
-                form = TeacherLoginForm()
-                return render(request, 'noteshub/teacherlogin.html', {'form': form})
-    else:
-        form = TeacherLoginForm()
-    return render(request, 'noteshub/teacherlogin.html', {'form': form})
+            try:
+                user = CustomUser.objects.get(
+                    roll_no=username,
+                    dob=dob,
+                    is_teacher=True
+                )
+                request.session['reset_user_id'] = user.id
+                return render(request, "noteshub/teacherforgotpassword.html", {
+                    'reset_stage': True,
+                    'success': 'Identity verified! Please set your new password.'
+                })
+            except CustomUser.DoesNotExist:
+                return render(request, "noteshub/teacherforgotpassword.html", {
+                    "error": "Invalid username or date of birth"
+                })
+        else:
+            # Step 2: Reset password
+            password = request.POST.get("newPassword")
+            confirm_password = request.POST.get("confirmNewPassword")
+            
+            if password != confirm_password:
+                return render(request, "noteshub/teacherforgotpassword.html", {
+                    'reset_stage': True,
+                    "error": "Passwords do not match"
+                })
+            
+            try:
+                user = CustomUser.objects.get(id=user_id)
+                user.set_password(password)
+                user.save()
+                del request.session['reset_user_id']
+                return render(request, "noteshub/teacherforgotpassword.html", {
+                    'success': 'Password reset successfully! Redirecting to login...'
+                })
+            except CustomUser.DoesNotExist:
+                return render(request, "noteshub/teacherforgotpassword.html", {
+                    'reset_stage': True,
+                    "error": "Session expired. Please try again."
+                })
+
+    return render(request, "noteshub/teacherforgotpassword.html", {
+        'reset_stage': bool(user_id)
+    })
+
+
 
 
 # ===================== TEACHER DASHBOARD =====================

@@ -8,22 +8,24 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #3498db;
-            --success-color: #27ae60;
-            --warning-color: #f39c12;
+            --navbar-color: #0F4C5C;
+            --button-color: #1B6F82;
+            --accent-color: #4CAF50;
+            --background-color: #F5F3EB;
+            --text-color: #222222;
+            --success-color: #4CAF50;
+            --warning-color: #ff8f00;
             --danger-color: #e74c3c;
-            --dark-color: #34495e;
-            --light-color: #ecf0f1;
+            --light-color: #ffffff;
         }
         
         /* Header Styles */
         .header {
-            background: rgba(0, 0, 0, 0.9);
+            background: var(--navbar-color);
             backdrop-filter: blur(10px);
             color: white;
             padding: 1rem 0;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 20px rgba(15, 76, 92, 0.3);
             border-bottom: 1px solid rgba(255, 255, 255, 0.2);
         }
 
@@ -111,17 +113,17 @@
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%,rgb(144, 72, 215) 100%);
+            background: var(--background-color);
             min-height: 100vh;
             line-height: 1.6;
-            color: #000000;
+            color: var(--text-color);
         }
     
         .sidebar {
-            background: rgba(0, 0, 0, 0.9);
+            background: var(--navbar-color);
             backdrop-filter: blur(10px);
             min-height: 100vh;
-            box-shadow: 2px 0 20px rgba(0, 0, 0, 0.3);
+            box-shadow: 2px 0 20px rgba(15, 76, 92, 0.3);
             border-right: 1px solid rgba(255, 255, 255, 0.1);
             color: #ffffff;
         }
@@ -137,7 +139,7 @@
 
         .sidebar .nav-link:hover,
         .sidebar .nav-link.active {
-            background: rgba(255, 255, 255, 0.2);
+            background: var(--button-color);
             color: #ffffff;
             transform: translateX(5px);
         }
@@ -148,14 +150,13 @@
         }
 
         .card {
-            background: rgba(255, 255, 255, 0.95);
-            border: 1px solid rgba(0, 0, 0, 0.1);
+            background: var(--light-color);
+            border: 1px solid rgba(15, 76, 92, 0.1);
             border-radius: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(15, 76, 92, 0.1);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             overflow: hidden;
-            color: #000000;
+            color: var(--text-color);
         }
 
         .card:hover {
@@ -164,22 +165,22 @@
         }
 
         .card-header {
-            background: rgba(255, 255, 255, 0.9);
-            color: #000000;
+            background: var(--light-color);
+            color: var(--text-color);
             border-radius: 20px 20px 0 0;
             padding: 20px;
             border-bottom: 1px solid rgba(0, 0, 0, 0.1);
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--button-color);
             border: none;
             padding: 10px 20px;
             border-radius: 10px;
             font-weight: 500;
             color: white;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 15px rgba(27, 111, 130, 0.3);
         }
 
         .btn-primary:hover {
@@ -222,7 +223,7 @@
         
         .status-approved { 
             background: #e8f5e9; 
-            color: #2e7d32;
+            color: var(--accent-color);
             border: 1px solid #c8e6c9;
         }
         
@@ -244,20 +245,20 @@
         }
 
         .filter-section {
-            background: white;
+            background: var(--light-color);
             padding: 20px;
             border-radius: 12px;
             margin-bottom: 20px;
+            border: 1px solid rgba(15, 76, 92, 0.1);
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .note-card {
-            background: rgba(255, 255, 255, 0.95);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: var(--light-color);
+            border: 1px solid rgba(15, 76, 92, 0.1);
             border-radius: 20px;
             padding: 25px;
             margin-bottom: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
             backdrop-filter: blur(5px);
         }
@@ -302,13 +303,13 @@
 
         /* Filter Form Styling */
         .filter-form {
-            background: rgba(0, 0, 0, 0.9);
+            background: var(--navbar-color);
             backdrop-filter: blur(10px);
             border-radius: 15px;
             padding: 20px;
             margin-bottom: 20px;
             border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 8px 32px rgba(15, 76, 92, 0.2);
             color: #ffffff;
         }
 
@@ -343,7 +344,7 @@
         }
 
         .form-control:focus, .form-select:focus {
-            border-color: var(--secondary-color);
+            border-color: var(--button-color);
             box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.3);
             background: rgba(0, 0, 0, 0.95);
             color: #ffffff;
@@ -360,7 +361,7 @@
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            background: var(--button-color);
             border: none;
             padding: 10px 25px;
             border-radius: 10px;
@@ -369,9 +370,9 @@
         }
 
         .btn-primary:hover {
-            background: linear-gradient(135deg, #2980b9 0%, #3498db 100%);
+            background: var(--navbar-color);
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+            box-shadow: 0 5px 15px rgba(15, 76, 92, 0.4);
         }
 
         .btn-outline-primary {
@@ -640,7 +641,7 @@
             <div class="col-md-3 col-lg-2 sidebar">
                 <div class="user-profile text-center">
                     <i class="fas fa-user-circle fa-3x text-white mb-2"></i>
-                    <h6 class="text-white">{{ user.get_full_name|default:user.username }}</h6>
+                    <h6 class="text-white">{{ user.get_full_name|default:user.roll_no }}</h6>
                     <small class="text-light">Teacher</small>
                 </div>
                 <nav class="nav flex-column">

@@ -3,357 +3,287 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teacher Login - DCE Notes Hub</title>
+    <title>Teacher Login</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
+        
+        :root {
+            --navbar-color: #0F4C5C;
+            --button-color: #1B6F82;
+            --accent-color: #4CAF50;
+            --background-color: #F5F3EB;
+            --text-color: #222222;
+            --success-color: #4CAF50;
+            --warning-color: #ff8f00;
+            --danger-color: #e74c3c;
+            --light-color: #ffffff;
+        }
+        
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--background-color);
             min-height: 100vh;
             display: flex;
-            align-items: center;
             justify-content: center;
+            align-items: center;
             padding: 20px;
+            color: var(--text-color);
         }
-
-        .login-container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
+        
+        .container {
+            background: var(--light-color);
+            border: 1px solid rgba(15, 76, 92, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(15, 76, 92, 0.1);
             width: 100%;
             max-width: 400px;
-            animation: slideUp 0.6s ease;
+            padding: 40px;
         }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .back-link {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            color: white;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-
-        .back-link:hover {
-            transform: translateX(-5px);
-        }
-
-        .login-header {
-            background: linear-gradient(45deg, #11998e, #38ef7d);
-            color: white;
-            padding: 40px 30px;
+        
+        .header {
             text-align: center;
+            margin-bottom: 30px;
         }
-
-        .login-icon {
-            width: 80px;
-            height: 80px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-            font-size: 36px;
-        }
-
-        .login-header h1 {
+        
+        .header h1 {
+            color: var(--text-color);
             font-size: 28px;
             margin-bottom: 10px;
         }
-
-        .login-header p {
-            opacity: 0.9;
-            font-size: 16px;
+        
+        .header p {
+            color: #666;
+            font-size: 14px;
         }
-
-        .login-form {
-            padding: 40px 30px;
-        }
-
+        
         .form-group {
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
-
-        .form-group label {
+        
+        label {
             display: block;
+            color: var(--text-color);
+            font-weight: 500;
             margin-bottom: 8px;
-            font-weight: 600;
-            color: #333;
+            font-size: 14px;
         }
-
-        .form-group input {
+        
+        input {
             width: 100%;
-            padding: 15px;
-            border: 2px solid #e1e5e9;
-            border-radius: 10px;
-            font-size: 16px;
-            transition: all 0.3s ease;
-            background: #f8f9fa;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s;
         }
-
-        .form-group input:focus {
+        
+        input:focus {
             outline: none;
-            border-color: #11998e;
-            background: white;
-            box-shadow: 0 0 0 3px rgba(17, 153, 142, 0.1);
+            border-color: var(--button-color);
+            box-shadow: 0 0 0 3px rgba(27, 111, 130, 0.1);
         }
-
-        .form-group input::placeholder {
-            color: #adb5bd;
+        
+        .password-group {
+            position: relative;
         }
-
-        .login-btn {
+        
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 40px;
+            cursor: pointer;
+            color: var(--button-color);
+            font-size: 14px;
+        }
+        
+        .error-message {
+            color: #e74c3c;
+            font-size: 13px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .alert {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .btn {
             width: 100%;
-            padding: 15px;
-            background: linear-gradient(45deg, #11998e, #38ef7d);
+            padding: 12px;
+            background: var(--button-color);
             color: white;
             border: none;
-            border-radius: 10px;
+            border-radius: 5px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
-            margin-bottom: 20px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 10px;
         }
-
-        .login-btn:hover {
+        
+        .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(17, 153, 142, 0.3);
+            box-shadow: 0 5px 20px rgba(27, 111, 130, 0.4);
+            background: var(--navbar-color);
         }
-
-        .login-btn:active {
+        
+        .btn:active {
             transform: translateY(0);
         }
-
-        .login-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
+        
+        .links {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            font-size: 13px;
         }
-
-        .switch-role {
-            text-align: center;
-            padding-top: 20px;
-            border-top: 1px solid #e1e5e9;
-            color: #666;
-        }
-
-        .switch-role a {
-            color: #11998e;
+        
+        .links a {
+            color: var(--button-color);
             text-decoration: none;
             font-weight: 600;
         }
-
-        .switch-role a:hover {
+        
+        .links a:hover {
             text-decoration: underline;
         }
-
-        .error-message {
-            background: #fee;
-            color: #c33;
-            padding: 10px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: none;
-            border-left: 4px solid #c33;
-        }
-
-        .success-message {
-            background: #efe;
-            color: #363;
-            padding: 10px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: none;
-            border-left: 4px solid #363;
-        }
-
-        .loading {
-            display: none;
+        
+        .footer {
             text-align: center;
-            margin-top: 10px;
+            margin-top: 20px;
+            color: #666;
+            font-size: 14px;
         }
-
-        .spinner {
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #11998e;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto;
+        
+        .footer a {
+            color: var(--button-color);
+            text-decoration: none;
+            font-weight: 600;
         }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        @media (max-width: 480px) {
-            .login-container {
-                margin: 10px;
-            }
-            
-            .login-header {
-                padding: 30px 20px;
-            }
-            
-            .login-form {
-                padding: 30px 20px;
-            }
+        
+        .footer a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
-    <a href="{% url 'landingpage' %}" class="back-link">
-        ← Back to Home
-    </a>
-
-    <div class="login-container">
-        <div class="login-header">
-            <div class="login-icon">👩‍🏫</div>
+    <div class="container">
+        <div class="header">
             <h1>Teacher Login</h1>
-            <p>Enter your username and password to access the portal</p>
+            <p>Access your teacher dashboard</p>
         </div>
-        <form method="POST" action="{% url 'teacherlogin' %}">
-    {% csrf_token %}
-    
-    {% if messages %}
-        {% for message in messages %}
-            <div class="error-message">{{ message }}</div>
-        {% endfor %}
-    {% endif %}
-
-    {% if form.non_field_errors %}
-        <div class="error-message">{{ form.non_field_errors }}</div>
-    {% endif %}
-
-    <div class="form-group">
-        <label for="id_username">Username</label>
-        {{ form.username }}
-        {% if form.username.errors %}
-            <div class="error-message">{{ form.username.errors.0 }}</div>
+        
+        {% if error %}
+        <div class="alert" id="alert">{{ error }}</div>
+        {% else %}
+        <div class="alert" id="alert" style="display: none;"></div>
         {% endif %}
-    </div>
-
-    <div class="form-group">
-        <label for="id_password">Password</label>
-        {{ form.password }}
-        {% if form.password.errors %}
-            <div class="error-message">{{ form.password.errors.0 }}</div>
-        {% endif %}
-    </div>
-
-    <button type="submit" class="login-btn">Login as Teacher</button>
-</form>
-
-            <div class="switch-role">
-                <p>Are you a student? <a href="{% url 'studentlogin' %}">Login here</a></p>
+        
+        <form id="loginForm" method="post" action="{% url 'teacherlogin' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="username">Username *</label>
+                <input type="text" id="username" name="username" placeholder="Enter your username" required>
+                <div class="error-message" id="usernameError"></div>
             </div>
+            
+            <div class="form-group">
+                <label for="dob">Date of Birth *</label>
+                <input type="date" id="dob" name="dob" required>
+                <div class="error-message" id="dobError"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password *</label>
+                <div class="password-group">
+                    <input type="password" id="password" name="password" placeholder="Enter password" required>
+                    <span class="toggle-password" onclick="togglePassword('password')">Show</span>
+                </div>
+                <div class="error-message" id="passwordError"></div>
+            </div>
+            
+            <button type="submit" class="btn">Login</button>
+        </form>
+        
+        <div class="links">
+            <a href="{% url 'teacherforgotpassword' %}">Forgot Password?</a>
+            <a href="{% url 'teachersignup' %}">Sign Up</a>
+        </div>
+        
+        <div class="footer">
+            <p>For student login, <a href="{% url 'studentlogin' %}">click here</a></p>
         </div>
     </div>
-
+    
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const form = document.getElementById('teacherLoginForm');
-            const loginBtn = document.getElementById('loginBtn');
-            const loading = document.getElementById('loading');
-            const errorMessage = document.getElementById('errorMessage');
-            const successMessage = document.getElementById('successMessage');
-            const usernameInput = document.getElementById('username');
-            const passwordInput = document.getElementById('password');
-
-            // Show error message
-            function showError(message) {
-                errorMessage.textContent = message;
-                errorMessage.style.display = 'block';
-                successMessage.style.display = 'none';
-                
-                setTimeout(() => {
-                    errorMessage.style.display = 'none';
-                }, 5000);
+        function togglePassword(fieldId) {
+            const field = document.getElementById(fieldId);
+            const btn = event.target;
+            if (field.type === 'password') {
+                field.type = 'text';
+                btn.textContent = 'Hide';
+            } else {
+                field.type = 'password';
+                btn.textContent = 'Show';
             }
-
-            // Handle form submission
-            form.addEventListener('submit', function(e) {
-                const username = usernameInput.value.trim();
-                const password = passwordInput.value.trim();
-
-                // Basic validation
-                if (!username) {
-                    showError('Please enter your username');
-                    return;
-                }
-
-                if (username.length < 3) {
-                    showError('Username must be at least 3 characters long');
-                    return;
-                }
-
-                if (!password) {
-                    showError('Please enter your password');
-                    return;
-                }
-
-                if (password.length < 6) {
-                    showError('Password must be at least 6 characters long');
-                    return;
-                }
-
-                // Show loading state
-                loginBtn.disabled = true;
-                loading.style.display = 'block';
-                errorMessage.style.display = 'none';
-                successMessage.style.display = 'none';
-            });
-
-            // Real-time username validation
-            usernameInput.addEventListener('input', function() {
-                const username = this.value.trim();
-                if (username && username.length < 3) {
-                    this.style.borderColor = '#dc3545';
-                } else {
-                    this.style.borderColor = '#e1e5e9';
-                }
-            });
-
-            // Enter key handling
-            passwordInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    form.dispatchEvent(new Event('submit'));
-                }
-            });
-
-            // Auto-focus on username input
-            usernameInput.focus();
-
-            // Demo credentials hint
-            console.log('Demo credentials:');
-            console.log('Username: demo, Password: demo123');
-            console.log('Username: teacher, Password: teacher123');
+        }
+        
+        // Form validation before submission
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            clearErrors();
+            
+            const username = document.getElementById('username').value.trim();
+            const dob = document.getElementById('dob').value;
+            const password = document.getElementById('password').value;
+            
+            let isValid = true;
+            
+            if (!username) {
+                showError('usernameError', 'Username is required');
+                isValid = false;
+            }
+            
+            if (!dob) {
+                showError('dobError', 'Date of birth is required');
+                isValid = false;
+            }
+            
+            if (!password) {
+                showError('passwordError', 'Password is required');
+                isValid = false;
+            }
+            
+            if (!isValid) {
+                event.preventDefault();
+            }
         });
+        
+        function showError(elementId, message) {
+            const errorElement = document.getElementById(elementId);
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+        }
+        
+        function showAlert(message) {
+            const alert = document.getElementById('alert');
+            alert.textContent = message;
+            alert.style.display = 'block';
+        }
+        
+        function clearErrors() {
+            const errors = document.querySelectorAll('.error-message');
+            errors.forEach(error => error.style.display = 'none');
+            document.getElementById('alert').style.display = 'none';
+        }
     </script>
 </body>
 </html>

@@ -249,7 +249,7 @@
             font-weight: bold;
         }
         .upload-btn {
-            background-color: #007bff;
+            background-color: var(--button-color);
             color: white;
             border: none;
             padding: 10px 14px;
@@ -279,17 +279,17 @@
         }
 
         .view-btn {
-            background-color: #28a745;
+            background-color: var(--success-color);
             color: white;
         }
 
         .download-btn {
-            background-color: #17a2b8;
+            background-color: var(--button-color);
             color: white;
         }
 
         .delete-btn {
-             background-color: #dc3545;
+             background-color: var(--danger-color);
              color: white;
         }
 
@@ -349,9 +349,9 @@
         .form-group input:focus,
         .form-group select:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: var(--button-color);
             background: white;
-            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            box-shadow: 0 0 0 4px rgba(27, 111, 130, 0.1);
             transform: translateY(-2px);
         }
 
@@ -361,7 +361,7 @@
         }
 
         .search-btn {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: var(--button-color);
             color: white;
             padding: 14px 28px;
             border: none;
@@ -391,7 +391,8 @@
 
         .search-btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 12px 30px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 12px 30px rgba(27, 111, 130, 0.4);
+            background: var(--navbar-color);
         }
 
         .reset-btn {
@@ -826,23 +827,23 @@
         }
 
         .file-upload-area {
-            border: 2px dashed #667eea;
+            border: 2px dashed var(--button-color);
             border-radius: 12px;
             padding: 40px;
             text-align: center;
-            background: rgba(102, 126, 234, 0.05);
+            background: rgba(27, 111, 130, 0.05);
             transition: all 0.3s ease;
             cursor: pointer;
         }
 
         .file-upload-area:hover {
-            background: rgba(102, 126, 234, 0.1);
-            border-color: #5a6fd8;
+            background: rgba(27, 111, 130, 0.1);
+            border-color: var(--navbar-color);
         }
 
         .file-upload-area.dragover {
-            background: rgba(102, 126, 234, 0.15);
-            border-color: #5a6fd8;
+            background: rgba(27, 111, 130, 0.15);
+            border-color: var(--navbar-color);
         }
 
         /* Loading Animation */
@@ -854,7 +855,7 @@
 
         .spinner {
             border: 4px solid #f3f3f3;
-            border-top: 4px solid #667eea;
+            border-top: 4px solid var(--button-color);
             border-radius: 50%;
             width: 40px;
             height: 40px;
