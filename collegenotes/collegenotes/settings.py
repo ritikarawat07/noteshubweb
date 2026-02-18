@@ -99,10 +99,18 @@ WSGI_APPLICATION = 'collegenotes.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'collegenotes_db',
+        'USER': 'root',
+        'PASSWORD': 'Ritika@7248324329',
+        'HOST': 'localhost',
+        'PORT': '3306',
     }
 }
+OPTIONS = {
+    'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
+}
+
 
 
 # Password validation

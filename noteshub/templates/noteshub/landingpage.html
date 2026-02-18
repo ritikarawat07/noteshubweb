@@ -13,7 +13,7 @@
 
         :root {
             --primary-color: #0F4C5C;     /* Primary Dark Teal */
-            --secondary-color: #1B6F82;   /* Secondary Medium Teal */
+            --secondary-color: #0F4C5C;   /* Secondary Medium Teal */
             --accent-color: #4CAF50;      /* Accent Green */
             --background-color: #F5F3EB;  /* Light Beige Background */
             --card-color: #FFFFFF;        /* White for cards */
@@ -73,15 +73,15 @@
             font-weight: bold;
         }
 
-        .logo-text h1 {
-            font-size: 24px;
-            color: var(--text-color);
-            margin-bottom: 5px;
+       .logo-text h1 {
+          font-size: 24px;
+          color: black;
+          margin-bottom: 5px;
         }
 
         .logo-text p {
-            font-size: 14px;
-            color: var(--text-color);
+          font-size: 14px;
+          color: black;
         }
 
         .auth-buttons {
@@ -116,11 +116,11 @@
         }
 
         .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(27, 111, 130, 0.4);
-            background: var(--navbar-color);
+           transform: translateY(-2px);
+           box-shadow: 0 5px 15px rgba(27, 111, 130, 0.4);
+           background: var(--navbar-color);
+           color: #ffffff;   /* ✅ ADD THIS LINE */
         }
-
         .hero {
             text-align: center;
             padding: 100px 0;

@@ -9,7 +9,7 @@
     <style>
         :root {
             --navbar-color: #0F4C5C;
-            --button-color: #1B6F82;
+            --button-color: #0F4C5C;
             --accent-color: #4CAF50;
             --background-color: #F5F3EB;
             --text-color: #222222;
@@ -20,23 +20,24 @@
         }
         
         /* Header Styles */
-        .header {
-            background: var(--navbar-color);
+         .header {
+            background: rgba(255, 255, 255, 0.95),
             backdrop-filter: blur(10px);
-            color: white;
+            color: black;
             padding: 1rem 0;
             box-shadow: 0 4px 20px rgba(15, 76, 92, 0.3);
             border-bottom: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .header-content {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 0 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
+
 
         .logo {
             display: flex;
@@ -58,13 +59,13 @@
         .logo-text h1 {
             font-size: 24px;
             margin-bottom: 5px;
-            color: white;
+            color: black;
         }
 
         .logo-text p {
             font-size: 14px;
             opacity: 0.9;
-            color: rgba(255, 255, 255, 0.8);
+            color: #666;
             margin: 0;
         }
 
@@ -180,12 +181,12 @@
             font-weight: 500;
             color: white;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(27, 111, 130, 0.3);
+            box-shadow: 0 4px 15px rgba(15, 76, 92, 0.3);
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 6px 20px rgba(15, 76, 92, 0.4);
         }
 
         .tab-content {

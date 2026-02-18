@@ -123,25 +123,34 @@ def studentforgotpassword(request):
 
         # 🔹 STEP 2: Reset Password
         else:
-            password = request.POST['password']
-            confirm_password = request.POST['confirm_password']
+            # Check if password fields are present in the POST request
+            if 'password' in request.POST and 'confirm_password' in request.POST:
+                password = request.POST['password']
+                confirm_password = request.POST['confirm_password']
 
-            if password != confirm_password:
+                if password != confirm_password:
+                    return render(
+                        request,
+                        'noteshub/studentforgotpassword.html',
+                        {
+                            'reset_stage': True,
+                            'error': 'Passwords do not match'
+                        }
+                    )
+
+                user = CustomUser.objects.get(id=user_id)
+                user.set_password(password)
+                user.save()
+
+                del request.session['reset_user_id']
+                return redirect('studentlogin')
+            else:
+                # If password fields are not present, just show the reset form again
                 return render(
                     request,
                     'noteshub/studentforgotpassword.html',
-                    {
-                        'reset_stage': True,
-                        'error': 'Passwords do not match'
-                    }
+                    {'reset_stage': True}
                 )
-
-            user = CustomUser.objects.get(id=user_id)
-            user.set_password(password)
-            user.save()
-
-            del request.session['reset_user_id']
-            return redirect('studentlogin')
 
     return render(request, 'noteshub/studentforgotpassword.html')
 
@@ -252,7 +261,6 @@ def teacher_forgot_password(request):
             try:
                 user = CustomUser.objects.get(
                     roll_no=username,
-                    dob=dob,
                     is_teacher=True
                 )
                 request.session['reset_user_id'] = user.id
@@ -266,28 +274,37 @@ def teacher_forgot_password(request):
                 })
         else:
             # Step 2: Reset password
-            password = request.POST.get("newPassword")
-            confirm_password = request.POST.get("confirmNewPassword")
-            
-            if password != confirm_password:
-                return render(request, "noteshub/teacherforgotpassword.html", {
-                    'reset_stage': True,
-                    "error": "Passwords do not match"
-                })
-            
-            try:
-                user = CustomUser.objects.get(id=user_id)
-                user.set_password(password)
-                user.save()
-                del request.session['reset_user_id']
-                return render(request, "noteshub/teacherforgotpassword.html", {
-                    'success': 'Password reset successfully! Redirecting to login...'
-                })
-            except CustomUser.DoesNotExist:
-                return render(request, "noteshub/teacherforgotpassword.html", {
-                    'reset_stage': True,
-                    "error": "Session expired. Please try again."
-                })
+            # Check if password fields are present in the POST request
+            if 'newPassword' in request.POST and 'confirmNewPassword' in request.POST:
+                password = request.POST.get("newPassword")
+                confirm_password = request.POST.get("confirmNewPassword")
+                
+                if password != confirm_password:
+                    return render(request, "noteshub/teacherforgotpassword.html", {
+                        'reset_stage': True,
+                        "error": "Passwords do not match"
+                    })
+                
+                try:
+                    user = CustomUser.objects.get(id=user_id)
+                    user.set_password(password)
+                    user.save()
+                    del request.session['reset_user_id']
+                    return render(request, "noteshub/teacherforgotpassword.html", {
+                        'success': 'Password reset successfully! Redirecting to login...'
+                    })
+                except CustomUser.DoesNotExist:
+                    return render(request, "noteshub/teacherforgotpassword.html", {
+                        'reset_stage': True,
+                        "error": "Session expired. Please try again."
+                    })
+            else:
+                # If password fields are not present, just show the reset form again
+                return render(
+                    request,
+                    "noteshub/teacherforgotpassword.html",
+                    {'reset_stage': True}
+                )
 
     return render(request, "noteshub/teacherforgotpassword.html", {
         'reset_stage': bool(user_id)
