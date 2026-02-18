@@ -23,9 +23,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-v^@qr=333_wu3*t5uyeb=+qfbi6_$@=n%d4(f*#w*mm4ywyx42'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+ALLOWED_HOSTS = ['*']  # Or specific domains for production
 
 
 # Application definition
@@ -65,6 +64,8 @@ import sys
 sys.path.append(str(BASE_DIR.parent))
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
@@ -99,16 +100,21 @@ WSGI_APPLICATION = 'collegenotes.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'collegenotes_db',
-        'USER': 'root',
-        'PASSWORD': 'Ritika@7248324329',
-        'HOST': 'localhost',
-        'PORT': '3306',
+import dj_database_url
+
+# Database configuration
+if 'DATABASE_URL' in os.environ:
+    DATABASES = {
+        'default': dj_database_url.parse(os.environ['DATABASE_URL'])
     }
-}
+else:
+    # Local development fallback
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 OPTIONS = {
     'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
 }
