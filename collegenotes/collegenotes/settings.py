@@ -115,9 +115,6 @@ else:
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
-OPTIONS = {
-    'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
-}
 
 
 
